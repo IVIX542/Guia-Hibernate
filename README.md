@@ -1,0 +1,1 @@
+Página web que explica paso a paso todo lo necesario para poder configurar Hibernate en Eclipse sin utilizar Maven. Enlaces directos a las descargas de los JARs, código para probar la conexión y errores comunes + pro tips.
