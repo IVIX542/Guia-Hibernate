@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Hibernate + Eclipse | Método Manual</title>
+    <style>
+        /* --- VARIABLES CSS (Tema Material Design 3) --- */
+        :root {
+            --md-sys-color-primary: #6750a4;
+            --md-sys-color-on-primary: #ffffff;
+            --md-sys-color-primary-container: #eaddff;
+            --md-sys-color-on-primary-container: #21005d;
+            --md-sys-color-secondary: #625b71;
+            --md-sys-color-surface: #fef7ff;
+            --md-sys-color-surface-container: #f3edf7;
+            --md-sys-color-on-surface: #1d1b20;
+            --md-sys-color-outline: #79747e;
+            --md-sys-color-error: #b3261e;
+            --md-sys-color-error-container: #f9dedc;
+            
+            --border-radius-l: 24px;
+            --border-radius-m: 16px;
+            --border-radius-s: 8px;
+            
+            --shadow-1: 0px 1px 3px 1px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
+            --shadow-2: 0px 4px 8px 3px rgba(0, 0, 0, 0.15), 0px 1px 3px 0px rgba(0, 0, 0, 0.3);
+        }
+
+        /* --- RESET & BASICS --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--md-sys-color-surface);
+            color: var(--md-sys-color-on-surface);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        /* --- LAYOUT --- */
+        .app-container {
+            display: flex;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* --- SIDEBAR NAVIGATION --- */
+        .sidebar {
+            width: 280px;
+            background-color: var(--md-sys-color-surface-container);
+            padding: 24px;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(0,0,0,0.05);
+            overflow-y: auto;
+        }
+
+        .brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--md-sys-color-primary);
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            border-radius: var(--border-radius-m);
+            color: var(--md-sys-color-on-surface);
+            transition: background 0.2s, color 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(103, 80, 164, 0.08);
+        }
+
+        .nav-link.active {
+            background-color: var(--md-sys-color-primary-container);
+            color: var(--md-sys-color-on-primary-container);
+        }
+
+        /* --- MAIN CONTENT --- */
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            max-width: 1000px;
+        }
+
+        /* --- TYPOGRAPHY & ELEMENTS --- */
+        h1 {
+            font-size: 3rem;
+            color: var(--md-sys-color-primary);
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-top: 48px;
+            margin-bottom: 24px;
+            color: var(--md-sys-color-on-surface);
+            border-bottom: 2px solid var(--md-sys-color-primary-container);
+            padding-bottom: 8px;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin-top: 32px;
+            margin-bottom: 16px;
+            color: var(--md-sys-color-secondary);
+        }
+
+        p { margin-bottom: 16px; font-size: 1.1rem; }
+
+        /* --- CARDS --- */
+        .card {
+            background-color: white;
+            border-radius: var(--border-radius-l);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-1);
+            transition: box-shadow 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-2);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--md-sys-color-primary);
+        }
+
+        /* --- ALERTS & INFO --- */
+        .alert {
+            padding: 16px;
+            border-radius: var(--border-radius-m);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .alert-error {
+            background-color: var(--md-sys-color-error-container);
+            color: var(--md-sys-color-error);
+            font-weight: bold;
+        }
+
+        .alert-info {
+            background-color: var(--md-sys-color-primary-container);
+            color: var(--md-sys-color-on-primary-container);
+        }
+
+        /* --- BUTTONS --- */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 24px;
+            border-radius: 100px;
+            background-color: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+            font-weight: 500;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        .btn:hover {
+            background-color: #55408a; /* Darker shade of primary */
+            box-shadow: var(--shadow-1);
+        }
+
+        .btn-small {
+            padding: 6px 16px;
+            font-size: 0.9rem;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--md-sys-color-outline);
+            color: var(--md-sys-color-on-surface);
+        }
+        
+        .btn-outline:hover {
+            background-color: rgba(0,0,0,0.05);
+        }
+
+        /* --- CODE BLOCKS --- */
+        .code-container {
+            position: relative;
+            background-color: #1e1e1e;
+            border-radius: var(--border-radius-m);
+            overflow: hidden;
+            margin: 16px 0;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 16px;
+            background-color: #2d2d2d;
+            color: #ccc;
+            font-size: 0.85rem;
+            font-family: monospace;
+        }
+
+        pre {
+            padding: 16px;
+            overflow-x: auto;
+            color: #d4d4d4;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.95rem;
+        }
+
+        .copy-btn {
+            background: transparent;
+            border: 1px solid #555;
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+        
+        .copy-btn:hover { background: #444; }
+
+        /* --- TABLE --- */
+        .download-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+        
+        .download-table th, .download-table td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .download-table th {
+            color: var(--md-sys-color-secondary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .app-container { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; position: relative; padding: 16px; }
+            .main-content { padding: 20px; }
+            h1 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+        <div class="brand">
+            <span>☕</span> Hibernate Wiki
+        </div>
+        <a href="#intro" class="nav-link active">Introducción</a>
+        <a href="#requisitos" class="nav-link">1. Requisitos</a>
+        <a href="#descargas" class="nav-link">2. Descargas (JARS)</a>
+        <a href="#integracion" class="nav-link">3. Integración Eclipse</a>
+        <a href="#configuracion" class="nav-link">4. Configuración</a>
+        <a href="#errores" class="nav-link">5. Errores Comunes</a>
+        <a href="#pro-tips" class="nav-link">6. Pro Tips</a>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        
+        <section id="intro">
+            <h1>Hibernate en Eclipse</h1>
+            <p style="font-size: 1.5rem; color: var(--md-sys-color-secondary);">La guía definitiva para la integración manual.</p>
+            <p>Esta documentación detalla cómo configurar Hibernate en un proyecto Java utilizando Eclipse IDE <strong>sin gestores de dependencias (Maven/Gradle)</strong>. Es el método ideal si tienes problemas de conexión o quieres entender cómo funciona el framework desde dentro.</p>
+            
+            <div class="alert alert-info">
+                <span>💡</span>
+                <div>
+                    <strong>Objetivo:</strong> Configurar un entorno funcional con MySQL, Java y Hibernate manualmente.
+                </div>
+            </div>
+        </section>
+
+        <section id="requisitos">
+            <h2>1. Requisitos Previos</h2>
+            <div class="card">
+                <p>Antes de empezar, asegúrate de tener instalado:</p>
+                <ul style="padding-left: 20px;">
+                    <li style="margin-bottom: 8px;">✅ <strong>Eclipse IDE:</strong> Versión 2023 o superior (para Enterprise Java).</li>
+                    <li style="margin-bottom: 8px;">✅ <strong>Java JDK:</strong> Versión 11, 17 o 21 (Recomendado 17).</li>
+                    <li style="margin-bottom: 8px;">✅ <strong>MySQL Server:</strong> Puede ser mediante XAMPP, WAMP o instalado nativamente.</li>
+                    <li>✅ <strong>Cliente SQL:</strong> Workbench, DBeaver o phpMyAdmin.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="descargas">
+            <h2>2. Descargas (El Kit de Supervivencia)</h2>
+            <p>Para Java moderno, necesitamos descargar varias piezas por separado.</p>
+
+            <div class="card">
+                <div class="card-title">A. El Motor & El Driver</div>
+                <p>Estos son los dos archivos fundamentales.</p>
+                <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                    <a href="https://sourceforge.net/projects/hibernate/files/hibernate-orm/" target="_blank" class="btn">
+                        📥 Descargar Hibernate Core (ZIP)
+                    </a>
+                    <a href="https://dev.mysql.com/downloads/connector/j/" target="_blank" class="btn btn-outline">
+                        📥 Descargar Driver MySQL
+                    </a>
+                </div>
+                <p style="margin-top: 16px; font-size: 0.9rem; color: #666;">* Para Hibernate, descomprime el ZIP y busca en <code>lib/required</code>.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-title">B. Dependencias "Ocultas" (Críticas para Java 11+)</div>
+                <p>Si no añades estas, tendrás errores tipo <code>NoClassDefFoundError</code>. Descárgalas todas.</p>
+                
+                <table class="download-table">
+                    <thead>
+                        <tr>
+                            <th>Archivo</th>
+                            <th>Función</th>
+                            <th>Descarga</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>hibernate-jpa-2.1-api</strong></td>
+                            <td>Diccionario JPA (Annotations)</td>
+                            <td><a href="https://repo1.maven.org/maven2/org/hibernate/javax/persistence/hibernate-jpa-2.1-api/1.0.0.Final/hibernate-jpa-2.1-api-1.0.0.Final.jar" class="btn btn-small">⬇ JAR</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>javax.transaction-api</strong></td>
+                            <td>Gestor de Transacciones</td>
+                            <td><a href="https://repo1.maven.org/maven2/javax/transaction/javax.transaction-api/1.3/javax.transaction-api-1.3.jar" class="btn btn-small">⬇ JAR</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>jaxb-api</strong></td>
+                            <td>API XML</td>
+                            <td><a href="https://repo1.maven.org/maven2/javax/xml/bind/jaxb-api/2.3.1/jaxb-api-2.3.1.jar" class="btn btn-small">⬇ JAR</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>jaxb-runtime</strong></td>
+                            <td>Motor XML</td>
+                            <td><a href="https://repo1.maven.org/maven2/org/glassfish/jaxb/jaxb-runtime/2.3.1/jaxb-runtime-2.3.1.jar" class="btn btn-small">⬇ JAR</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>istack-commons-runtime</strong></td>
+                            <td>Utilidad Interna</td>
+                            <td><a href="https://repo1.maven.org/maven2/com/sun/istack/istack-commons-runtime/3.0.7/istack-commons-runtime-3.0.7.jar" class="btn btn-small">⬇ JAR</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="integracion">
+            <h2>3. Integración en Eclipse</h2>
+            
+            <div class="card">
+                <h3>Paso 1: Crear el Proyecto</h3>
+                <p>Crea un <strong>Java Project</strong> normal.</p>
+                <div class="alert alert-error">
+                    <span>⚠️</span>
+                    <div>
+                        <strong>MUY IMPORTANTE:</strong> Si Eclipse te pregunta <em>"Create module-info.java?"</em>, selecciona <strong>Don't Create</strong>. Si se crea, bórralo inmediatamente de la carpeta src.
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Paso 2: Configurar Build Path</h3>
+                <ol style="padding-left: 20px; line-height: 2;">
+                    <li>Clic derecho en el proyecto -> <strong>Build Path</strong> -> <strong>Configure Build Path...</strong></li>
+                    <li>Ve a la pestaña <strong>Libraries</strong>.</li>
+                    <li>Selecciona <strong>Classpath</strong> (Asegúrate de NO seleccionar Modulepath).</li>
+                    <li>Haz clic en el botón <strong>Add External JARs...</strong></li>
+                    <li>Selecciona <strong>TODOS</strong> los archivos descargados (Core, Driver y Ocultos).</li>
+                    <li>Pulsa <strong>Apply and Close</strong>.</li>
+                </ol>
+            </div>
+        </section>
+
+        <section id="configuracion">
+            <h2>4. Configuración (XML)</h2>
+            <p>Este es el "mapa" que le dice a Hibernate dónde está tu base de datos. Crea el archivo <code>hibernate.cfg.xml</code> dentro de la carpeta <code>src</code>.</p>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span>hibernate.cfg.xml</span>
+                    <button class="copy-btn" onclick="copyCode('xml-code')">Copiar</button>
+                </div>
+                <pre id="xml-code">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!-- Si Eclipse da error de descarga, borra las líneas de DOCTYPE --&gt;
+&lt;!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd"&gt;
+        
+&lt;hibernate-configuration&gt;
+    &lt;session-factory&gt;
+        &lt;!-- 1. CONEXIÓN (Modificar estos datos) --&gt;
+        &lt;property name="connection.driver_class"&gt;com.mysql.cj.jdbc.Driver&lt;/property&gt;
+        &lt;property name="connection.url"&gt;jdbc:mysql://localhost:3306/TU_BASE_DE_DATOS&lt;/property&gt;
+        &lt;property name="connection.username"&gt;root&lt;/property&gt;
+        &lt;property name="connection.password"&gt;TU_CONTRASEÑA&lt;/property&gt;
+
+        &lt;!-- 2. CONFIGURACIÓN --&gt;
+        &lt;property name="show_sql"&gt;true&lt;/property&gt;
+        &lt;property name="dialect"&gt;org.hibernate.dialect.MySQLDialect&lt;/property&gt;
+        &lt;property name="hbm2ddl.auto"&gt;update&lt;/property&gt;
+
+        &lt;!-- 3. TUS CLASES (Añadir aquí) --&gt;
+        &lt;mapping class="com.tutorial.Videojuego"/&gt;
+        &lt;mapping class="com.tutorial.Plataforma"/&gt;
+        
+    &lt;/session-factory&gt;
+&lt;/hibernate-configuration&gt;</pre>
+            </div>
+        </section>
+
+        <section id="errores">
+            <h2>5. Errores Comunes y Soluciones</h2>
+            
+            <div class="card">
+                <div style="color: var(--md-sys-color-error); font-weight: bold; margin-bottom: 8px;">🔴 Error: NoClassDefFoundError</div>
+                <p><strong>Causa:</strong> Falta un archivo .jar en el Build Path.</p>
+                <p><strong>Solución:</strong> Revisa la tabla de la Sección 2. Te faltan las librerías JAXB o Transaction.</p>
+            </div>
+
+            <div class="card">
+                <div style="color: var(--md-sys-color-error); font-weight: bold; margin-bottom: 8px;">🔴 Error: javax.persistence.Entity cannot be resolved</div>
+                <p><strong>Causa:</strong> Eclipse no ve la librería JPA o está mal colocada.</p>
+                <p><strong>Solución:</strong> Ve al Build Path y asegúrate de que los JARs están en <strong>Classpath</strong>, no en Modulepath.</p>
+            </div>
+
+            <div class="card">
+                <div style="color: var(--md-sys-color-error); font-weight: bold; margin-bottom: 8px;">🔴 Error: Access denied for user 'root'</div>
+                <p><strong>Causa:</strong> Contraseña incorrecta en el XML.</p>
+                <p><strong>Solución:</strong> Edita <code>hibernate.cfg.xml</code> y pon la contraseña real de tu MySQL.</p>
+            </div>
+        </section>
+
+        <section id="pro-tips">
+            <h2>6. Pro Tips</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px;">
+                <div class="card">
+                    <div class="card-title">🚀 Múltiples XML</div>
+                    <p>No sobrescribas siempre el mismo archivo. Crea <code>hibernate-juegos.cfg.xml</code> y <code>hibernate-escuela.cfg.xml</code> y cárgalos en Java según necesites.</p>
+                </div>
+                <div class="card">
+                    <div class="card-title">🧹 Limpieza</div>
+                    <p>Si Eclipse muestra errores rojos pero el código está bien, ve a <strong>Project -> Clean...</strong> para forzar una recompilación.</p>
+                </div>
+                <div class="card">
+                    <div class="card-title">🛠️ HibernateUtil</div>
+                    <p>Usa siempre una clase Singleton auxiliar para crear la <code>SessionFactory</code> una sola vez al inicio de la app.</p>
+                </div>
+            </div>
+        </section>
+
+        <footer style="margin-top: 60px; padding: 20px; text-align: center; color: #888; border-top: 1px solid #eee;">
+            <p>Documentación generada para aprendizaje de Hibernate.</p>
+        </footer>
+
+    </main>
+</div>
+
+<script>
+    // --- SCROLL SPY PARA EL MENÚ ---
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('section');
+
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            if (pageYOffset >= (sectionTop - 150)) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href').includes(current)) {
+                link.classList.add('active');
+            }
+        });
+    });
+
+    // --- FUNCIÓN COPIAR CÓDIGO ---
+    function copyCode(elementId) {
+        const copyText = document.getElementById(elementId).innerText;
+        navigator.clipboard.writeText(copyText).then(() => {
+            const btn = document.querySelector('.copy-btn');
+            const originalText = btn.innerText;
+            btn.innerText = '¡Copiado!';
+            btn.style.background = '#4caf50';
+            btn.style.borderColor = '#4caf50';
+            
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.style.background = 'transparent';
+                btn.style.borderColor = '#555';
+            }, 2000);
+        });
+    }
+</script>
+
+</body>
+</html>
