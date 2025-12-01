@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guía Hibernate + Eclipse | Introducción</title>
+    <title>Guía Hibernate + Eclipse | Requisitos</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 
@@ -16,8 +16,8 @@
             <div class="brand">
                 <span>☕</span> Hibernate Wiki
             </div>
-            <a href="index.html" class="nav-link active">Introducción</a>
-            <a href="requisitos.html" class="nav-link">1. Requisitos</a>
+            <a href="index.html" class="nav-link">Introducción</a>
+            <a href="requisitos.html" class="nav-link active">1. Requisitos</a>
             <a href="descargas.html" class="nav-link">2. Descargas (JARS)</a>
             <a href="integracion.html" class="nav-link">3. Integración Eclipse</a>
             <a href="configuracion.html" class="nav-link">4. Configuración</a>
@@ -29,21 +29,19 @@
         <!-- MAIN CONTENT -->
         <main class="main-content">
 
-            <section id="intro">
-                <h1>Hibernate en Eclipse</h1>
-                <p style="font-size: 1.5rem; color: var(--md-sys-color-secondary);">La guía definitiva para la
-                    integración manual.</p>
-                <p>Esta documentación detalla cómo configurar Hibernate en un proyecto Java utilizando Eclipse IDE
-                    <strong>sin gestores de dependencias (Maven/Gradle)</strong>. Es el método ideal si tienes problemas
-                    de conexión o quieres entender cómo funciona el framework desde dentro.
-                </p>
-
-                <div class="alert alert-info">
-                    <span>💡</span>
-                    <div>
-                        <strong>Objetivo:</strong> Configurar un entorno funcional con MySQL, Java y Hibernate
-                        manualmente.
-                    </div>
+            <section id="requisitos">
+                <h2>1. Requisitos Previos</h2>
+                <div class="card">
+                    <p>Antes de empezar, asegúrate de tener instalado:</p>
+                    <ul style="padding-left: 20px;">
+                        <li style="margin-bottom: 8px;">✅ <strong>Eclipse IDE:</strong> Versión 2023 o superior (para
+                            Enterprise Java).</li>
+                        <li style="margin-bottom: 8px;">✅ <strong>Java JDK:</strong> Versión 11, 17 o 21 (Recomendado
+                            17).</li>
+                        <li style="margin-bottom: 8px;">✅ <strong>MySQL Server:</strong> Puede ser mediante XAMPP, WAMP
+                            o instalado nativamente.</li>
+                        <li>✅ <strong>Cliente SQL:</strong> Workbench, DBeaver o phpMyAdmin.</li>
+                    </ul>
                 </div>
             </section>
 
